@@ -1,55 +1,120 @@
+using System.Data;
 using Dapper;
+using MySql.Data.MySqlClient;
 
 namespace DapperDatabaseInterface.DbContext.MySql;
 
-internal sealed class MySqlDbContext : IDbContext
+internal sealed class MySqlDbContext : BaseContext
 {
     public MySqlDbContext(string connectionString)
+        : base(connectionString)
     {
-        
-    }
-    public ICollection<T> Get<T>(string query, object? parameters = null)
-    {
-        throw new NotImplementedException();
     }
 
-    public async Task<ICollection<T>> GetAsync<T>(string query, object? parameters = null)
+    public override void Add(string sql, DynamicParameters parameters)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Connection = new MySqlConnection(ConnectionString);
+            Connection.Open();
+            CurrentTran = Connection.BeginTransaction();
+            Connection.Execute(sql, parameters, CurrentTran);
+        }
+        catch (Exception)
+        {
+            CurrentTran?.Rollback();
+            Reset();
+            throw;
+        }
     }
 
-    public void Add<T>(string sql, T data)
+    public override async Task AddAsync(string sql, DynamicParameters parameters)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Connection = new MySqlConnection(ConnectionString);
+            Connection.Open();
+            CurrentTran = Connection.BeginTransaction();
+            await Connection.ExecuteAsync(sql, parameters, CurrentTran);
+        }
+        catch (Exception)
+        {
+            CurrentTran?.Rollback();
+            Reset();
+            throw;
+        }
     }
 
-    public void Add(string sql, DynamicParameters parameters)
+    public override ICollection<T> Get<T>(string query, object? parameters = null)
     {
-        throw new NotImplementedException();
+        if (Connection != null) return Connection.Query<T>(query, parameters).ToList();
+
+        using IDbConnection conn = new MySqlConnection(ConnectionString);
+        var dbResult = conn.Query<T>(query, parameters);
+        return dbResult.ToList();
     }
 
-    public async Task AddAsync(string sql, DynamicParameters parameters)
+    public override async Task<ICollection<T>> GetAsync<T>(string query, object? parameters = null)
     {
-        throw new NotImplementedException();
+        if (Connection != null)
+        {
+            var dbResult = await Connection.QueryAsync<T>(query, parameters);
+            return dbResult.ToList();
+        }
+
+        using IDbConnection conn = new MySqlConnection(ConnectionString);
+        var result = await conn.QueryAsync<T>(query, parameters);
+        return result.ToList();
     }
 
-    public void Delete(string sql, object? parameters = null)
+    public override void SaveChanges()
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (Connection == null)
+            {
+                Connection = new MySqlConnection(ConnectionString);
+                Connection.Open();
+                CurrentTran = Connection.BeginTransaction();
+            }
+
+            foreach (var data in DataToSave) CurrentTran.Connection.Execute(data.Item1, data.Item2, CurrentTran);
+            CurrentTran.Commit();
+        }
+        catch (Exception)
+        {
+            CurrentTran?.Rollback();
+            throw;
+        }
+        finally
+        {
+            Reset();
+        }
     }
 
-    public void Update<T>(string sql, T data)
+    public override async Task SaveChangesAsync()
     {
-        throw new NotImplementedException();
-    }
+        try
+        {
+            if (Connection == null)
+            {
+                Connection = new MySqlConnection(ConnectionString);
+                Connection.Open();
+                CurrentTran = Connection.BeginTransaction();
+            }
 
-    public void SaveChanges()
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task SaveChangesAsync()
-    {
-        throw new NotImplementedException();
+            foreach (var (item1, item2) in DataToSave)
+                await CurrentTran.Connection.ExecuteAsync(item1, item2, CurrentTran);
+            CurrentTran.Commit();
+        }
+        catch (Exception)
+        {
+            CurrentTran?.Rollback();
+            throw;
+        }
+        finally
+        {
+            Reset();
+        }
     }
 }
