@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>ICalderazzo.DapperDatabaseInterface</PackageId>
+        <Title>DapperDatabaseInterface</Title>
+        <Authors>icalderazzo</Authors>
+        <Description>Simple database interface implmented with micro ORM Dapper. Supports both SqlServer and MySql.</Description>
+        <Copyright>MIT</Copyright>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Dapper" Version="2.0.123" />
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    </ItemGroup>
+
+</Project>
