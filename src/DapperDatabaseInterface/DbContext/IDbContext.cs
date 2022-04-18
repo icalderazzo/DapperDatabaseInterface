@@ -37,7 +37,7 @@ public interface IDbContext
     /// <param name="sql">Sql Insert Query/Queries.</param>
     /// <param name="parameters">Parameters for the query.</param>
     void Add(string sql, DynamicParameters parameters);
-    
+
     /// <summary>
     ///     Asynchronusly sends data to the database (on a new transaction) using DynamicParamters in order
     ///     to be able to get 'out' parameters, eg: a database generated primary key.
@@ -45,7 +45,7 @@ public interface IDbContext
     /// <param name="sql">Sql Insert Query/Queries.</param>
     /// <param name="parameters">Parameters for the query.</param>
     Task AddAsync(string sql, DynamicParameters parameters);
-    
+
     /// <summary>
     ///     Stores data to be deleted in the database context.
     /// </summary>

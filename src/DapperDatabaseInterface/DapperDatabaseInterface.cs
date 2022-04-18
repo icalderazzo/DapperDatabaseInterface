@@ -6,11 +6,12 @@ namespace DapperDatabaseInterface;
 public class DapperDatabaseInterface : IDapperDatabaseInterface
 {
     private readonly IDbContext _context;
+
     public DapperDatabaseInterface(IDbContext context)
     {
         _context = context;
     }
-    
+
     public ICollection<T> Get<T>(string query, object? parameters = null)
     {
         return _context.Get<T>(query, parameters);
