@@ -23,31 +23,24 @@ public class DapperDatabaseInterface : IDapperDatabaseInterface
         return result;
     }
 
-    public void Add<T>(string sql, T data)
+    public void Add(string sql, object? parametersData)
     {
-        _context.Add(sql, data);
+        if (sql.Contains('@') && parametersData == null)
+            throw new NullReferenceException("A query with parameters requires parametersData to not be null.");
+
+        _context.Add(sql, parametersData);
+    }
+    
+    public void Create(string sql, DynamicParameters parameters)
+    {
+        _context.Create(sql, parameters);
     }
 
-    public void Add(string sql, DynamicParameters parameters)
+    public async Task CreateAsync(string sql, DynamicParameters parameters)
     {
-        _context.Add(sql, parameters);
+        await _context.CreateAsync(sql, parameters);
     }
-
-    public async Task AddAsync(string sql, DynamicParameters parameters)
-    {
-        await _context.AddAsync(sql, parameters);
-    }
-
-    public void Delete(string sql, object? parameters = null)
-    {
-        _context.Delete(sql, parameters);
-    }
-
-    public void Update<T>(string sql, T data)
-    {
-        _context.Update(sql, data);
-    }
-
+    
     public void SaveChanges()
     {
         _context.SaveChanges();

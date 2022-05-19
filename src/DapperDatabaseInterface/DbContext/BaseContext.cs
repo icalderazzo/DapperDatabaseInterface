@@ -12,7 +12,7 @@ internal abstract class BaseContext : IDbContext
     ///     Item1: the sql query
     ///     Item2: data to be saved (or query parameters)
     /// </summary>
-    protected readonly List<(string, object?)> DataToSave;
+    protected readonly List<(string, object?)> DataToBeCommitted;
 
     protected IDbConnection? Connection;
     protected IDbTransaction? CurrentTran;
@@ -20,38 +20,22 @@ internal abstract class BaseContext : IDbContext
     protected BaseContext(string connectionString)
     {
         ConnectionString = connectionString;
-        DataToSave = new List<(string, object?)>();
+        DataToBeCommitted = new List<(string, object?)>();
     }
 
     public abstract ICollection<T> Get<T>(string query, object? parameters = null);
 
     public abstract Task<ICollection<T>> GetAsync<T>(string query, object? parameters = null);
-
-    public void Add<T>(string sql, T data)
+    
+    public void Add(string sql, object? parametersData)
     {
-        if (data == null)
-            throw new NullReferenceException("Data cannot be null");
-
-        DataToSave.Add((sql, data));
+        DataToBeCommitted.Add((sql, parametersData));
     }
+    
+    public abstract void Create(string sql, DynamicParameters parameters);
 
-    public abstract void Add(string sql, DynamicParameters parameters);
-
-    public abstract Task AddAsync(string sql, DynamicParameters parameters);
-
-    public void Delete(string sql, object? parameters = null)
-    {
-        DataToSave.Add((sql, parameters));
-    }
-
-    public void Update<T>(string sql, T data)
-    {
-        if (data == null)
-            throw new NullReferenceException();
-
-        DataToSave.Add((sql, data));
-    }
-
+    public abstract Task CreateAsync(string sql, DynamicParameters parameters);
+    
     public abstract void SaveChanges();
 
     public abstract Task SaveChangesAsync();
@@ -59,7 +43,7 @@ internal abstract class BaseContext : IDbContext
     protected void Reset()
     {
         CurrentTran = null;
-        DataToSave.Clear();
+        DataToBeCommitted.Clear();
         if (Connection is not {State: ConnectionState.Open}) return;
         Connection.Close();
         Connection = null;

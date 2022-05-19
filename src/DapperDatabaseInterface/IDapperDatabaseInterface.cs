@@ -22,53 +22,42 @@ public interface IDapperDatabaseInterface
     Task<ICollection<T>> GetAsync<T>(string query, object? parameters = null);
 
     /// <summary>
-    ///     Adds new data to the context.
+    ///     Adds an instruction to be executed (Insert, Update, Delete). 
+    ///     Requires execution of SaveChanges or SaveChangesAsync for the changes to take effect.
     /// </summary>
-    /// <typeparam name="T">Type of object to save.</typeparam>
-    /// <param name="sql">SQL Insert Query/Queries.</param>
-    /// <param name="data">An object that has the parameters for the query/queries passed.</param>
-    /// <exception cref="NullReferenceException">When the data object passed is null.</exception>
-    void Add<T>(string sql, T data);
-
+    /// <param name="sql">SQL Insert, Update, Delete Query/Queries.</param>
+    /// <param name="parametersData">An object that has the parameters for the query/queries passed.</param>
+    /// <exception cref="NullReferenceException">When the sql instruction has parameters
+    /// and parametersData object passed is null.</exception>
+    void Add(string sql, object? parametersData);
+    
     /// <summary>
-    ///     Sends data to the database (on a new transaction) using DynamicParamters in order
+    ///     Sends data to the database (on a new transaction) using DynamicParameters in order
     ///     to be able to get 'out' parameters, eg: a database generated primary key.
+    /// 
+    ///     This should be only executed as the first step of a new transaction.
     /// </summary>
     /// <param name="sql">Sql Insert Query/Queries.</param>
     /// <param name="parameters">Parameters for the query.</param>
-    void Add(string sql, DynamicParameters parameters);
+    void Create(string sql, DynamicParameters parameters);
 
     /// <summary>
-    ///     Asynchronusly sends data to the database (on a new transaction) using DynamicParamters in order
+    ///     Asynchronously sends data to the database (on a new transaction) using DynamicParameters in order
     ///     to be able to get 'out' parameters, eg: a database generated primary key.
+    ///
+    ///     This should be only executed as the first step of a new transaction.
     /// </summary>
     /// <param name="sql">Sql Insert Query/Queries.</param>
     /// <param name="parameters">Parameters for the query.</param>
-    Task AddAsync(string sql, DynamicParameters parameters);
-
+    Task CreateAsync(string sql, DynamicParameters parameters);
+    
     /// <summary>
-    ///     Stores data to be deleted in the database context.
-    /// </summary>
-    /// <param name="sql">SQL Delete Query/Queries.</param>
-    /// <param name="parameters">An object that has the parameters for the query/queires passed.</param>
-    void Delete(string sql, object? parameters = null);
-
-    /// <summary>
-    ///     Stores updated data locally in the database context.
-    /// </summary>
-    /// <typeparam name="T">Type of object to update.</typeparam>
-    /// <param name="sql">SQL Update Query/Queries.</param>
-    /// <param name="data">An object that has the parameters for the query/queries passed.</param>
-    /// <exception cref="NullReferenceException">When the data object passed is null.</exception>
-    void Update<T>(string sql, T data);
-
-    /// <summary>
-    ///     Sends changes to the database.
+    ///     Saves changes in the database using a new transaction. 
     /// </summary>
     void SaveChanges();
 
     /// <summary>
-    ///     Sends changes to the database asychronously.
+    ///     Sends changes to the database asynchronously using a new transaction.
     /// </summary>
     /// <returns></returns>
     Task SaveChangesAsync();
