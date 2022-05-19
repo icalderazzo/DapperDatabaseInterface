@@ -22,46 +22,28 @@ public interface IDbContext
     Task<ICollection<T>> GetAsync<T>(string query, object? parameters = null);
 
     /// <summary>
-    ///     Adds new data to the context.
+    ///     Adds new query with its parameters to the context.
     /// </summary>
-    /// <typeparam name="T">Type of object to save.</typeparam>
-    /// <param name="sql">SQL Insert Query/Queries.</param>
-    /// <param name="data">An object that has the parameters for the query/queries passed.</param>
-    /// <exception cref="NullReferenceException">When the data object passed is null.</exception>
-    void Add<T>(string sql, T data);
-
+    /// <param name="sql">SQL Insert or Update Query/Queries.</param>
+    /// <param name="parametersData">An object that has the parameters for the query/queries passed.</param>
+    void Add(string sql, object? parametersData);
+    
     /// <summary>
-    ///     Sends data to the database (on a new transaction) using DynamicParamters in order
+    ///     Sends data to the database (on a new transaction) using DynamicParameters in order
     ///     to be able to get 'out' parameters, eg: a database generated primary key.
     /// </summary>
     /// <param name="sql">Sql Insert Query/Queries.</param>
     /// <param name="parameters">Parameters for the query.</param>
-    void Add(string sql, DynamicParameters parameters);
+    void Create(string sql, DynamicParameters parameters);
 
     /// <summary>
-    ///     Asynchronusly sends data to the database (on a new transaction) using DynamicParamters in order
+    ///     Asynchronously sends data to the database (on a new transaction) using DynamicParameters in order
     ///     to be able to get 'out' parameters, eg: a database generated primary key.
     /// </summary>
     /// <param name="sql">Sql Insert Query/Queries.</param>
     /// <param name="parameters">Parameters for the query.</param>
-    Task AddAsync(string sql, DynamicParameters parameters);
-
-    /// <summary>
-    ///     Stores data to be deleted in the database context.
-    /// </summary>
-    /// <param name="sql">SQL Delete Query/Queries.</param>
-    /// <param name="parameters">An object that has the parameters for the query/queires passed.</param>
-    void Delete(string sql, object? parameters = null);
-
-    /// <summary>
-    ///     Stores updated data locally in the database context.
-    /// </summary>
-    /// <typeparam name="T">Type of object to update.</typeparam>
-    /// <param name="sql">SQL Update Query/Queries.</param>
-    /// <param name="data">An object that has the parameters for the query/queries passed.</param>
-    /// <exception cref="NullReferenceException">When the data object passed is null.</exception>
-    void Update<T>(string sql, T data);
-
+    Task CreateAsync(string sql, DynamicParameters parameters);
+    
     /// <summary>
     ///     Sends changes to the database.
     /// </summary>

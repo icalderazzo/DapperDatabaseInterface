@@ -11,7 +11,7 @@ internal sealed class SqlServerDbContext : BaseContext
     {
     }
 
-    public override void Add(string sql, DynamicParameters parameters)
+    public override void Create(string sql, DynamicParameters parameters)
     {
         try
         {
@@ -28,7 +28,7 @@ internal sealed class SqlServerDbContext : BaseContext
         }
     }
 
-    public override async Task AddAsync(string sql, DynamicParameters parameters)
+    public override async Task CreateAsync(string sql, DynamicParameters parameters)
     {
         try
         {
@@ -82,7 +82,7 @@ internal sealed class SqlServerDbContext : BaseContext
                 CurrentTran = Connection.BeginTransaction();
             }
 
-            foreach (var data in DataToSave) CurrentTran.Connection.Execute(data.Item1, data.Item2, CurrentTran);
+            foreach (var data in DataToBeCommitted) CurrentTran.Connection.Execute(data.Item1, data.Item2, CurrentTran);
             CurrentTran.Commit();
         }
         catch (Exception)
@@ -107,7 +107,7 @@ internal sealed class SqlServerDbContext : BaseContext
                 CurrentTran = Connection.BeginTransaction();
             }
 
-            foreach (var (item1, item2) in DataToSave)
+            foreach (var (item1, item2) in DataToBeCommitted)
                 await CurrentTran.Connection.ExecuteAsync(item1, item2, CurrentTran);
             CurrentTran.Commit();
         }
