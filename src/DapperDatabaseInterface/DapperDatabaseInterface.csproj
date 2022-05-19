@@ -9,8 +9,12 @@
         <Title>DapperDatabaseInterface</Title>
         <Authors>icalderazzo</Authors>
         <Description>Simple database interface implmented with micro ORM Dapper. Supports both SqlServer and MySql.</Description>
-        <Copyright>MIT</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageVersion>1.1.0</PackageVersion>
+        <RepositoryUrl>https://github.com/icalderazzo/DapperDatabaseInterface</RepositoryUrl>
+        <PackageReleaseNotes>Single entry point for storing instructions (Insert, Update, Delete queries), and now any object can be used as parameters.
+
+More detailed summary for each method.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
