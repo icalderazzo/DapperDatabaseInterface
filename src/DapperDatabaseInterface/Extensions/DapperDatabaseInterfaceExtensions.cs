@@ -1,7 +1,7 @@
 using DapperDatabaseInterface.DbContext;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DapperDatabaseInterface;
+namespace DapperDatabaseInterface.Extensions;
 
 public enum Engine
 {
@@ -9,7 +9,7 @@ public enum Engine
     MySql
 }
 
-public static class Injector
+public static class DapperDatabaseInterfaceExtensions
 {
     public static void AddDapperDatabaseInterface(this IServiceCollection services, Engine engine,
         string connectionString)

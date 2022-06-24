@@ -10,18 +10,17 @@
         <Authors>icalderazzo</Authors>
         <Description>Simple database interface implmented with micro ORM Dapper. Supports both SqlServer and MySql.</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>1.1.0</PackageVersion>
+        <PackageVersion>1.1.2</PackageVersion>
         <RepositoryUrl>https://github.com/icalderazzo/DapperDatabaseInterface</RepositoryUrl>
-        <PackageReleaseNotes>Single entry point for storing instructions (Insert, Update, Delete queries), and now any object can be used as parameters.
-
-More detailed summary for each method.</PackageReleaseNotes>
+        <PackageReleaseNotes>
+        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.0.123" />
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-        <PackageReference Include="MySql.Data" Version="8.0.28" />
+        <PackageReference Include="Dapper" Version="2.0.123"/>
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
+        <PackageReference Include="MySql.Data" Version="8.0.28"/>
     </ItemGroup>
 
 </Project>
