@@ -22,12 +22,30 @@ public interface IDbContext
     Task<ICollection<T>> GetAsync<T>(string query, object? parameters = null);
 
     /// <summary>
+    ///     Gets a single instance of type T by executing a single-row query.
+    /// </summary>
+    /// <param name="query">Sql select query with WHERE or HAVING clause.</param>
+    /// <param name="parameters">An object that has the parameters for the query.</param>
+    /// <typeparam name="T">Type of return object.</typeparam>
+    /// <returns></returns>
+    T? GetSingle<T>(string query, object? parameters = null);
+
+    /// <summary>
+    ///     Gets a single instance of type T by executing a single-row query asynchronously.
+    /// </summary>
+    /// <param name="query">Sql select query with WHERE or HAVING clause.</param>
+    /// <param name="parameters">An object that has the parameters for the query.</param>
+    /// <typeparam name="T">Type of return object.</typeparam>
+    /// <returns></returns>
+    Task<T?> GetSingleAsync<T>(string query, object? parameters = null);
+
+    /// <summary>
     ///     Adds new query with its parameters to the context.
     /// </summary>
     /// <param name="sql">SQL Insert or Update Query/Queries.</param>
     /// <param name="parametersData">An object that has the parameters for the query/queries passed.</param>
     void Add(string sql, object? parametersData);
-    
+
     /// <summary>
     ///     Sends data to the database (on a new transaction) using DynamicParameters in order
     ///     to be able to get 'out' parameters, eg: a database generated primary key.
@@ -43,14 +61,14 @@ public interface IDbContext
     /// <param name="sql">Sql Insert Query/Queries.</param>
     /// <param name="parameters">Parameters for the query.</param>
     Task CreateAsync(string sql, DynamicParameters parameters);
-    
+
     /// <summary>
     ///     Sends changes to the database.
     /// </summary>
     void SaveChanges();
 
     /// <summary>
-    ///     Sends changes to the database asychronously.
+    ///     Sends changes to the database asynchronously.
     /// </summary>
     /// <returns></returns>
     Task SaveChangesAsync();

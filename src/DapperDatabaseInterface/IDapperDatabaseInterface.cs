@@ -22,19 +22,38 @@ public interface IDapperDatabaseInterface
     Task<ICollection<T>> GetAsync<T>(string query, object? parameters = null);
 
     /// <summary>
-    ///     Adds an instruction to be executed (Insert, Update, Delete). 
+    ///     Gets a single instance of type T by executing a single-row query.
+    /// </summary>
+    /// <param name="query">Sql select query with WHERE or HAVING clause.</param>
+    /// <param name="parameters">An object that has the parameters for the query.</param>
+    /// <typeparam name="T">Type of return object.</typeparam>
+    /// <returns></returns>
+    T? GetSingle<T>(string query, object? parameters = null);
+
+    /// <summary>
+    ///     Gets a single instance of type T by executing a single-row query asynchronously.
+    /// </summary>
+    /// <param name="query">Sql select query with WHERE or HAVING clause.</param>
+    /// <param name="parameters">An object that has the parameters for the query.</param>
+    /// <typeparam name="T">Type of return object.</typeparam>
+    /// <returns></returns>
+    Task<T?> GetSingleAsync<T>(string query, object? parameters = null);
+
+    /// <summary>
+    ///     Adds an instruction to be executed (Insert, Update, Delete).
     ///     Requires execution of SaveChanges or SaveChangesAsync for the changes to take effect.
     /// </summary>
     /// <param name="sql">SQL Insert, Update, Delete Query/Queries.</param>
     /// <param name="parametersData">An object that has the parameters for the query/queries passed.</param>
-    /// <exception cref="NullReferenceException">When the sql instruction has parameters
-    /// and parametersData object passed is null.</exception>
+    /// <exception cref="NullReferenceException">
+    ///     When the sql instruction has parameters
+    ///     and parametersData object passed is null.
+    /// </exception>
     void Add(string sql, object? parametersData);
-    
+
     /// <summary>
     ///     Sends data to the database (on a new transaction) using DynamicParameters in order
     ///     to be able to get 'out' parameters, eg: a database generated primary key.
-    /// 
     ///     This should be only executed as the first step of a new transaction.
     /// </summary>
     /// <param name="sql">Sql Insert Query/Queries.</param>
@@ -44,15 +63,14 @@ public interface IDapperDatabaseInterface
     /// <summary>
     ///     Asynchronously sends data to the database (on a new transaction) using DynamicParameters in order
     ///     to be able to get 'out' parameters, eg: a database generated primary key.
-    ///
     ///     This should be only executed as the first step of a new transaction.
     /// </summary>
     /// <param name="sql">Sql Insert Query/Queries.</param>
     /// <param name="parameters">Parameters for the query.</param>
     Task CreateAsync(string sql, DynamicParameters parameters);
-    
+
     /// <summary>
-    ///     Saves changes in the database using a new transaction. 
+    ///     Saves changes in the database using a new transaction.
     /// </summary>
     void SaveChanges();
 
